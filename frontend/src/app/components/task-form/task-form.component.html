@@ -1,0 +1,38 @@
+<div class="overlay" (click)="onCancel()">
+  <form class="modal" (click)="$event.stopPropagation()" (ngSubmit)="onSubmit()">
+    <h2>{{ isEditMode ? 'Edit Task' : 'New Task' }}</h2>
+
+    <label for="title">Title</label>
+    <input id="title" type="text" [(ngModel)]="title" name="title" placeholder="e.g. Prepare demo slides" />
+
+    <label for="description">Description</label>
+    <textarea id="description" [(ngModel)]="description" name="description" rows="3" placeholder="Optional details"></textarea>
+
+    <div class="row">
+      <div class="col">
+        <label for="status">Status</label>
+        <select id="status" [(ngModel)]="status" name="status">
+          <option value="todo">To do</option>
+          <option value="in-progress">In progress</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label for="priority">Priority</label>
+        <select id="priority" [(ngModel)]="priority" name="priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="btn-primary">{{ isEditMode ? 'Save Changes' : 'Add Task' }}</button>
+    </div>
+  </form>
+</div>

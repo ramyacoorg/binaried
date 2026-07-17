@@ -1,0 +1,46 @@
+<div class="page">
+  <header class="topbar">
+    <h1>TaskFlow</h1>
+    <div class="topbar-right">
+      <span class="greeting" *ngIf="userName">Hi, {{ userName }}</span>
+      <button class="btn-secondary" (click)="logout()">Log out</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="toolbar">
+      <h2>My Tasks</h2>
+      <button class="btn-primary" (click)="openCreateForm()">+ New Task</button>
+    </div>
+
+    <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p *ngIf="loading">Loading tasks...</p>
+    <p *ngIf="!loading && tasks.length === 0" class="empty-state">
+      No tasks yet. Click "+ New Task" to add your first one.
+    </p>
+
+    <div class="task-grid" *ngIf="!loading && tasks.length > 0">
+      <div class="task-card" *ngFor="let task of tasks">
+        <div class="task-card-header">
+          <h3>{{ task.title }}</h3>
+          <span class="badge" [ngClass]="'priority-' + task.priority">{{ task.priority }}</span>
+        </div>
+        <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+        <span class="badge status-badge" [ngClass]="'status-' + task.status">
+          {{ task.status }}
+        </span>
+        <div class="task-actions">
+          <button class="btn-link" (click)="openEditForm(task)">Edit</button>
+          <button class="btn-link danger" (click)="deleteTask(task)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-task-form
+    *ngIf="showForm"
+    [task]="taskBeingEdited"
+    (save)="onSaveTask($event)"
+    (close)="closeForm()"
+  ></app-task-form>
+</div>
