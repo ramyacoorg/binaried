@@ -1,4 +1,10 @@
 require('dotenv').config();
+if (process.env.ANTHROPIC_API_KEY) {
+  console.log('ANTHROPIC_API_KEY loaded');
+}
+if (process.env.HUGGINGFACE_API_KEY) {
+  console.log('HUGGINGFACE_API_KEY loaded');
+}
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
