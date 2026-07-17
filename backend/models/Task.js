@@ -24,6 +24,14 @@ const taskSchema = new mongoose.Schema(
       enum: ['low', 'medium', 'high'],
       default: 'medium',
     },
+    tags: {
+      type: [String],
+      default: [],
+    },
+    dueDate: {
+      type: Date,
+      default: null,
+    },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

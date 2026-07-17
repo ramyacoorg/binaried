@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/tasks');
+const aiRoutes = require('./routes/ai');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Simple health check route - useful to confirm the server is running
 app.get('/api/health', (req, res) => {

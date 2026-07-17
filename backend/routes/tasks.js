@@ -7,10 +7,24 @@ const router = express.Router();
 // Every route below requires a valid login (see middleware/auth.js).
 router.use(requireAuth);
 
-// GET /api/tasks - list all tasks belonging to the logged-in user
+// GET /api/tasks - list tasks belonging to the logged-in user.
+// Supports optional query params: ?status=todo&priority=high&search=demo
 router.get('/', async (req, res) => {
   try {
-    const tasks = await Task.find({ owner: req.userId }).sort({ createdAt: -1 });
+    const { status, priority, search } = req.query;
+    const filter = { owner: req.userId };
+
+    if (status) filter.status = status;
+    if (priority) filter.priority = priority;
+    if (search) {
+      // case-insensitive match on title or description
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const tasks = await Task.find(filter).sort({ createdAt: -1 });
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: 'Could not fetch tasks.', error: err.message });
@@ -20,7 +34,7 @@ router.get('/', async (req, res) => {
 // POST /api/tasks - create a new task
 router.post('/', async (req, res) => {
   try {
-    const { title, description, status, priority } = req.body;
+    const { title, description, status, priority, tags, dueDate } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: 'Title is required.' });
@@ -31,6 +45,8 @@ router.post('/', async (req, res) => {
       description,
       status,
       priority,
+      tags,
+      dueDate: dueDate || null,
       owner: req.userId,
     });
 
