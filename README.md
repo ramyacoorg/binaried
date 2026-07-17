@@ -9,7 +9,7 @@ A small full-stack task manager built with **Angular**, **Node.js/Express**, and
 - Each task has a title, description, status (todo / in-progress / done), priority (low / medium / high), tags, and an optional due date
 - Search tasks by title/description, and filter by status or priority
 - A small dashboard bar showing task counts (total / todo / in-progress / done)
-- **AI Suggest**: click the button on the task form and Claude generates a short description plus a few subtasks from just the title — this is a real AI feature used *inside* the app, not just a tool used to build it
+- **AI Suggest**: click the button on the task form and a Hugging Face inference model generates a short description plus a few subtasks from just the title — this is a real AI feature used *inside* the app, not just a tool used to build it
 - Tasks are private to the logged-in user
 - Responsive UI (single column on mobile, multi-column grid on larger screens)
 
@@ -42,10 +42,10 @@ cd backend
 npm install
 cp .env.example .env
 # edit .env and set MONGO_URI and JWT_SECRET
-# (optional) set ANTHROPIC_API_KEY to enable the "AI Suggest" button on the task form
+# (optional) set HUGGINGFACE_API_KEY and HUGGINGFACE_MODEL to enable the "AI Suggest" button on the task form
 npm start
 ```
-The API runs on `http://localhost:5000`. Everything works without `ANTHROPIC_API_KEY` — only the "AI Suggest" button is disabled without it.
+The API runs on `http://localhost:5000`. Everything works without `HUGGINGFACE_API_KEY` — only the "AI Suggest" button is disabled without it.
 
 ### 2. Frontend
 ```
@@ -55,15 +55,16 @@ npm start
 ```
 The app runs on `http://localhost:4200`. Register a new account, then log in to start adding tasks.
 
-## AI tools used
+## AI integration
 
-- **Claude** was used throughout to scaffold the project structure, write the Express/MongoDB backend (models, routes, JWT middleware), and build the Angular components (auth forms, task CRUD UI, route guard, HTTP interceptor).
+- **Hugging Face** is used for the in-app "AI Suggest" feature through the Hugging Face Inference API.
+- Configure `HUGGINGFACE_API_KEY` and optionally `HUGGINGFACE_MODEL` in the backend environment to enable AI-generated task suggestions.
 
 ## Where AI helped
 
-- Generating the initial boilerplate for both the Express API and the Angular standalone components, so I could focus on understanding and adapting it rather than typing repetitive setup code from scratch.
-- Getting the JWT auth flow (interceptor + guard + middleware) working correctly on the first pass — this was the part I was least familiar with.
-- Suggesting a clean, responsive CSS layout for the task cards without pulling in a UI library.
+- Adding an in-app AI suggestion flow so task descriptions and subtasks can be generated directly from the task title.
+- Helping connect the backend API with the frontend form so the feature feels native to the app experience.
+- Supporting a lightweight, responsive UI for the task workflow without introducing a heavy UI framework.
 
 ## What I implemented / reviewed myself
 
