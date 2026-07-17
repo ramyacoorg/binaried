@@ -1,0 +1,78 @@
+# TaskFlow — Binaried Assignment
+
+A small full-stack task manager built with **Angular**, **Node.js/Express**, and **MongoDB**, with basic JWT authentication and full CRUD on tasks.
+
+## Features
+
+- Register / log in with a JWT-based session (basic auth, as requested)
+- Create, read, update, and delete tasks
+- Each task has a title, description, status (todo / in-progress / done), and priority (low / medium / high)
+- Tasks are private to the logged-in user
+- Responsive UI (single column on mobile, multi-column grid on larger screens)
+
+## Project structure
+
+```
+binaried-assignment/
+├── backend/          Node.js + Express + MongoDB API
+│   ├── models/        Mongoose schemas (User, Task)
+│   ├── routes/         auth.js (register/login), tasks.js (CRUD)
+│   ├── middleware/     auth.js (JWT verification)
+│   └── server.js
+└── frontend/          Angular app
+    └── src/app/
+        ├── components/  login, register, task-list, task-form
+        ├── services/    auth.service.ts, task.service.ts
+        ├── guards/      auth.guard.ts
+        └── interceptors/ auth.interceptor.ts (attaches JWT to requests)
+```
+
+## Setup instructions
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB running locally, or a free MongoDB Atlas cluster
+
+### 1. Backend
+```
+cd backend
+npm install
+cp .env.example .env
+# edit .env and set MONGO_URI and JWT_SECRET
+npm start
+```
+The API runs on `http://localhost:5000`.
+
+### 2. Frontend
+```
+cd frontend
+npm install
+npm start
+```
+The app runs on `http://localhost:4200`. Register a new account, then log in to start adding tasks.
+
+## AI tools used
+
+- **Claude** was used throughout to scaffold the project structure, write the Express/MongoDB backend (models, routes, JWT middleware), and build the Angular components (auth forms, task CRUD UI, route guard, HTTP interceptor).
+
+## Where AI helped
+
+- Generating the initial boilerplate for both the Express API and the Angular standalone components, so I could focus on understanding and adapting it rather than typing repetitive setup code from scratch.
+- Getting the JWT auth flow (interceptor + guard + middleware) working correctly on the first pass — this was the part I was least familiar with.
+- Suggesting a clean, responsive CSS layout for the task cards without pulling in a UI library.
+
+## What I implemented / reviewed myself
+
+*(Personalize this section honestly before submitting — e.g., which parts you read line-by-line and understood, any bugs you fixed yourself, any changes you made to the AI-generated code, and anything you added on top of it.)*
+
+## Challenges faced
+
+*(Fill in based on your actual experience — e.g., getting MongoDB connected locally, understanding how the JWT token flows from login → interceptor → protected routes, etc.)*
+
+## If I had more time, I would improve
+
+- Add form validation feedback (e.g. disabling the submit button until required fields are valid)
+- Add pagination or filtering (by status/priority) on the task list
+- Add unit tests for the backend routes and Angular services
+- Add a "forgot password" flow and email verification
+- Deploy the backend and frontend so the Live Demo link works out of the box
