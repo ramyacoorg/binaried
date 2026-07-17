@@ -1,0 +1,22 @@
+<div class="auth-wrapper">
+  <form class="auth-card" (ngSubmit)="onSubmit()">
+    <h1>TaskFlow</h1>
+    <p class="subtitle">Log in to manage your tasks</p>
+
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" [(ngModel)]="email" placeholder="you@example.com" />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" [(ngModel)]="password" placeholder="••••••••" />
+
+    <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Logging in...' : 'Log In' }}
+    </button>
+
+    <p class="switch-link">
+      Don't have an account? <a routerLink="/register">Register</a>
+    </p>
+  </form>
+</div>
