@@ -8,9 +8,45 @@
   </header>
 
   <div class="container">
+    <div class="stats-bar">
+      <div class="stat-card"><span class="stat-num">{{ stats.total }}</span><span class="stat-label">Total</span></div>
+      <div class="stat-card"><span class="stat-num">{{ stats.todo }}</span><span class="stat-label">To do</span></div>
+      <div class="stat-card"><span class="stat-num">{{ stats.inProgress }}</span><span class="stat-label">In progress</span></div>
+      <div class="stat-card"><span class="stat-num">{{ stats.done }}</span><span class="stat-label">Done</span></div>
+    </div>
+
     <div class="toolbar">
       <h2>My Tasks</h2>
       <button class="btn-primary" (click)="openCreateForm()">+ New Task</button>
+    </div>
+
+    <div class="filters-bar">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search tasks..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+      />
+      <select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+        <option value="">All statuses</option>
+        <option value="todo">To do</option>
+        <option value="in-progress">In progress</option>
+        <option value="done">Done</option>
+      </select>
+      <select [(ngModel)]="priorityFilter" (ngModelChange)="onFilterChange()">
+        <option value="">All priorities</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button
+        class="btn-link"
+        *ngIf="searchTerm || statusFilter || priorityFilter"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
     </div>
 
     <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
@@ -26,6 +62,13 @@
           <span class="badge" [ngClass]="'priority-' + task.priority">{{ task.priority }}</span>
         </div>
         <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+
+        <div class="tag-row" *ngIf="task.tags && task.tags.length">
+          <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
+        </div>
+
+        <p class="due-date" *ngIf="task.dueDate">Due {{ task.dueDate | date: 'mediumDate' }}</p>
+
         <span class="badge status-badge" [ngClass]="'status-' + task.status">
           {{ task.status }}
         </span>

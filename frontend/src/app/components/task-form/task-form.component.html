@@ -5,8 +5,28 @@
     <label for="title">Title</label>
     <input id="title" type="text" [(ngModel)]="title" name="title" placeholder="e.g. Prepare demo slides" />
 
-    <label for="description">Description</label>
-    <textarea id="description" [(ngModel)]="description" name="description" rows="3" placeholder="Optional details"></textarea>
+    <div class="description-label-row">
+      <label for="description">Description</label>
+      <button
+        type="button"
+        class="btn-ai"
+        (click)="getAiSuggestion()"
+        [disabled]="aiLoading"
+      >
+        {{ aiLoading ? 'Thinking...' : '✨ AI Suggest' }}
+      </button>
+    </div>
+    <textarea id="description" [(ngModel)]="description" name="description" rows="3" placeholder="Optional details, or click AI Suggest"></textarea>
+
+    <ul class="ai-subtasks" *ngIf="aiSuggestedSubtasks.length">
+      <li *ngFor="let step of aiSuggestedSubtasks">{{ step }}</li>
+    </ul>
+
+    <label for="tags">Tags (comma separated)</label>
+    <input id="tags" type="text" [(ngModel)]="tagsInput" name="tags" placeholder="e.g. urgent, client" />
+
+    <label for="dueDate">Due date</label>
+    <input id="dueDate" type="date" [(ngModel)]="dueDate" name="dueDate" />
 
     <div class="row">
       <div class="col">

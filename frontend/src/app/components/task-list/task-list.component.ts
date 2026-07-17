@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Task, TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,7 +9,7 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, TaskFormComponent],
+  imports: [CommonModule, FormsModule, TaskFormComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
 })
@@ -19,6 +20,12 @@ export class TaskListComponent implements OnInit {
 
   showForm = false;
   taskBeingEdited: Task | null = null;
+
+  // search/filter state
+  searchTerm = '';
+  statusFilter = '';
+  priorityFilter = '';
+  private searchDebounce: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private taskService: TaskService,
@@ -36,16 +43,49 @@ export class TaskListComponent implements OnInit {
 
   loadTasks(): void {
     this.loading = true;
-    this.taskService.getTasks().subscribe({
-      next: (tasks) => {
-        this.tasks = tasks;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMessage = err.error?.message || 'Could not load tasks.';
-      },
-    });
+    this.taskService
+      .getTasks({
+        status: this.statusFilter,
+        priority: this.priorityFilter,
+        search: this.searchTerm.trim(),
+      })
+      .subscribe({
+        next: (tasks) => {
+          this.tasks = tasks;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err.error?.message || 'Could not load tasks.';
+        },
+      });
+  }
+
+  // Debounce so we don't fire a request on every keystroke
+  onSearchChange(): void {
+    if (this.searchDebounce) clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => this.loadTasks(), 350);
+  }
+
+  onFilterChange(): void {
+    this.loadTasks();
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.statusFilter = '';
+    this.priorityFilter = '';
+    this.loadTasks();
+  }
+
+  // Dashboard-style counts shown at the top of the page
+  get stats() {
+    return {
+      total: this.tasks.length,
+      todo: this.tasks.filter((t) => t.status === 'todo').length,
+      inProgress: this.tasks.filter((t) => t.status === 'in-progress').length,
+      done: this.tasks.filter((t) => t.status === 'done').length,
+    };
   }
 
   openCreateForm(): void {
