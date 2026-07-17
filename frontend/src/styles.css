@@ -1,0 +1,45 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.error-text {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* Basic responsive breakpoint used across components */
+@media (max-width: 600px) {
+  .container {
+    padding: 12px;
+  }
+}
