@@ -6,7 +6,10 @@ A small full-stack task manager built with **Angular**, **Node.js/Express**, and
 
 - Register / log in with a JWT-based session (basic auth, as requested)
 - Create, read, update, and delete tasks
-- Each task has a title, description, status (todo / in-progress / done), and priority (low / medium / high)
+- Each task has a title, description, status (todo / in-progress / done), priority (low / medium / high), tags, and an optional due date
+- Search tasks by title/description, and filter by status or priority
+- A small dashboard bar showing task counts (total / todo / in-progress / done)
+- **AI Suggest**: click the button on the task form and Claude generates a short description plus a few subtasks from just the title — this is a real AI feature used *inside* the app, not just a tool used to build it
 - Tasks are private to the logged-in user
 - Responsive UI (single column on mobile, multi-column grid on larger screens)
 
@@ -39,9 +42,10 @@ cd backend
 npm install
 cp .env.example .env
 # edit .env and set MONGO_URI and JWT_SECRET
+# (optional) set ANTHROPIC_API_KEY to enable the "AI Suggest" button on the task form
 npm start
 ```
-The API runs on `http://localhost:5000`.
+The API runs on `http://localhost:5000`. Everything works without `ANTHROPIC_API_KEY` — only the "AI Suggest" button is disabled without it.
 
 ### 2. Frontend
 ```
