@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:5000/api/tasks';
-const AI_URL = 'http://localhost:5000/api/ai';
+const API_URL = 'https://binaried-5dmm.onrender.com/api/tasks';
+const AI_URL = 'https://binaried-5dmm.onrender.com/api/ai';
 
 export interface Task {
   _id?: string;
