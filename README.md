@@ -67,12 +67,30 @@ The app runs on `http://localhost:4200`. Register a new account, then log in to 
 - Supporting a lightweight, responsive UI for the task workflow without introducing a heavy UI framework.
 
 ## What I implemented / reviewed myself
-
-*(Personalize this section honestly before submitting — e.g., which parts you read line-by-line and understood, any bugs you fixed yourself, any changes you made to the AI-generated code, and anything you added on top of it.)*
+- Reviewed the JWT auth flow (register/login â†’ token â†’ interceptor attaches
+  it to every request â†’ backend middleware verifies it) until I could
+  explain it end to end.
+- Set up and debugged MongoDB Atlas myself, including creating the database
+  user, configuring network access, and building the connection string.
+- Deployed the app myself across three platforms (MongoDB Atlas, Render for
+  the backend, Vercel for the frontend), including fixing CORS and
+  hardcoded URLs so the deployed frontend could actually reach the
+  deployed backend.
+- Debugged the AI Suggest feature myself when it wasn't returning real
+  AI-generated output, tracing it through backend logs to find the actual
+  cause rather than guessing.
+  
 
 ## Challenges faced
-
-*(Fill in based on your actual experience — e.g., getting MongoDB connected locally, understanding how the JWT token flows from login → interceptor → protected routes, etc.)*
+ 
+The biggest challenge was deployment â€” getting MongoDB Atlas, Render, and
+Vercel to all talk to each other correctly. I ran into a MongoDB
+authentication error caused by a special character in my password not
+being URL-encoded, which I fixed by resetting to a simpler password. I also
+hit an issue where the AI Suggest feature kept returning generic text
+instead of a real AI-generated suggestion â€” I'm still working through
+diagnosing whether that's a Hugging Face API/model issue or a backend
+configuration issue, using backend logs to narrow it down.
 
 ## If I had more time, I would improve
 
