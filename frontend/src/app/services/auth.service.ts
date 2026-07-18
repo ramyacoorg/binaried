@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = 'https://binaried-5dmm.onrender.com/api/auth';
 
 export interface AuthUser {
   id: string;
