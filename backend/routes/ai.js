@@ -5,9 +5,6 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-// Used when no Hugging Face key is configured, or if the Hugging Face
-// call fails or returns nothing usable - keeps the feature usable
-// instead of just erroring out.
 function generateLocalSuggestion(title) {
   const safeTitle = (title || '').trim();
   return {
@@ -20,34 +17,28 @@ function generateLocalSuggestion(title) {
   };
 }
 
-// POST /api/ai/suggest
-// Given just a task title, asks a Hugging Face model to generate a short
-// description. This is a real AI feature used INSIDE the app (not just a
-// tool used to write the code) - it saves the user from typing a
-// description by hand. Small free-tier models are unreliable at
-// producing valid JSON, so we only ask the model for plain text (the
-// description) and generate the subtasks locally - this is much more
-// robust than parsing JSON out of a small model's output.
-//
-// Requires HUGGINGFACE_API_KEY in backend/.env (free tier available at
-// huggingface.co/settings/tokens). Without it, this route still responds
-// with a locally-generated suggestion so the button never breaks the UI.
 router.post('/suggest', async (req, res) => {
+  console.log('=== AI SUGGEST ROUTE HIT ===');
   const { title } = req.body;
+  console.log('Title received:', title);
 
   if (!title || !title.trim()) {
+    console.log('No title provided, returning 400');
     return res.status(400).json({ message: 'A task title is required to generate suggestions.' });
   }
 
   const fallback = generateLocalSuggestion(title);
 
+  console.log('HUGGINGFACE_API_KEY present?', !!process.env.HUGGINGFACE_API_KEY);
   if (!process.env.HUGGINGFACE_API_KEY) {
+    console.log('No API key found in this request context, using local fallback');
     return res.json(fallback);
   }
 
   try {
     const model = process.env.HUGGINGFACE_MODEL || 'google/flan-t5-small';
     const prompt = `Write one short sentence (under 15 words) describing how to complete this task: "${title}"`;
+    console.log('Calling Hugging Face model:', model);
 
     const hfResponse = await fetch(`https://api-inference.huggingface.co/models/${model}`, {
       method: 'POST',
@@ -61,12 +52,17 @@ router.post('/suggest', async (req, res) => {
       }),
     });
 
+    console.log('Hugging Face response status:', hfResponse.status);
+
     if (!hfResponse.ok) {
-      console.warn('Hugging Face API error:', hfResponse.status, await hfResponse.text());
+      const errText = await hfResponse.text();
+      console.warn('Hugging Face API error:', hfResponse.status, errText);
       return res.json(fallback);
     }
 
     const hfData = await hfResponse.json();
+    console.log('Hugging Face raw response:', JSON.stringify(hfData));
+
     const rawText = Array.isArray(hfData)
       ? hfData[0]?.generated_text
       : hfData.generated_text;
@@ -77,8 +73,7 @@ router.post('/suggest', async (req, res) => {
       return res.json(fallback);
     }
 
-    // Description comes from the AI model; subtasks are generated locally
-    // since small free models aren't reliable at multi-item structured output.
+    console.log('Using AI-generated description:', description);
     return res.json({
       description,
       subtasks: fallback.subtasks,
